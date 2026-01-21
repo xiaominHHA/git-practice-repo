@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,115 +8,439 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6B8AFB)),
+        useMaterial3: true,
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// Custom Colors
+const Color kBackgroundColor = Color(0xFFF2F5F9);
+const Color kCardColor = Colors.white;
+const Color kPrimaryTextColor = Color(0xFF2D3748);
+const Color kSecondaryTextColor = Color(0xFF718096);
+const Color kAccentColor = Color(0xFF6B8AFB);
+const Color kMintGreen = Color(0xFFE6FFFA);
+const Color kMintGreenText = Color(0xFF38B2AC);
+const Color kLightYellow = Color(0xFFFFFBEB);
+const Color kLightYellowText = Color(0xFFF6E05E);
+const Color kLightBlue = Color(0xFFEBF8FF);
+const Color kLightBlueText = Color(0xFF4299E1);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
 
-  void _incrementCounter() {
+  void _onItemTapped(int index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        backgroundColor: kBackgroundColor,
+        elevation: 0,
+        leading: const NeumorphicIconButton(icon: Icons.arrow_back_ios_new),
+        title: const Text('Home', style: TextStyle(fontWeight: FontWeight.bold, color: kPrimaryTextColor, fontSize: 24)),
+        centerTitle: false,
+        actions: const [
+          NeumorphicIconButton(icon: Icons.info_outline),
+          SizedBox(width: 12),
+          NeumorphicIconButton(icon: Icons.refresh),
+          SizedBox(width: 12),
+          NeumorphicIconButton(icon: Icons.calendar_today_outlined),
+          SizedBox(width: 16),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Southwest University', style: TextStyle(color: kAccentColor, fontWeight: FontWeight.w600)),
+                  const Icon(Icons.keyboard_arrow_down, color: kAccentColor),
+                ],
+              ),
+              const SizedBox(height: 24),
+              _buildSearchBar(),
+              const SizedBox(height: 24),
+              _buildAcademicSnapshot(),
+              const SizedBox(height: 24),
+              _buildQuickActions(),
+              const SizedBox(height: 24),
+              _buildAiAssistant(),
+              const SizedBox(height: 24),
+              _buildRecommended(),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.apps_outlined), label: 'Services'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), label: 'Discover'),
+          BottomNavigationBarItem(icon: Icon(Icons.message_outlined), label: 'Messages'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: kAccentColor,
+        unselectedItemColor: kSecondaryTextColor,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: kCardColor,
+        elevation: 10,
+        showUnselectedLabels: true,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: const TextField(
+        decoration: InputDecoration(
+          hintText: 'Search schedule, grades, events, errands',
+          hintStyle: TextStyle(color: kSecondaryTextColor, fontSize: 14),
+          prefixIcon: Icon(Icons.search, color: kSecondaryTextColor),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNeumorphicCard({required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            spreadRadius: 2,
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.white.withOpacity(0.6),
+            spreadRadius: -2,
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  Widget _buildAcademicSnapshot() {
+    return _buildNeumorphicCard(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Academic Snapshot', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: kPrimaryTextColor)),
+                Row(
+                  children: [
+                    const Icon(Icons.update, size: 14, color: kSecondaryTextColor),
+                    const SizedBox(width: 4),
+                    Text('Updated just now', style: TextStyle(color: kSecondaryTextColor, fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildSnapshotItem('Weighted Avg', '88.5'),
+                _buildSnapshotItem('Rank Est.', 'Top 10-15%'),
+                _buildSnapshotItem('GPA', '3.82'),
+                _buildSnapshotItem('Credits', '18/18'),
+              ],
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+
+  Widget _buildSnapshotItem(String title, String value) {
+    return Column(
+      children: [
+        Text(title, style: const TextStyle(color: kSecondaryTextColor, fontSize: 12, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: kPrimaryTextColor)),
+      ],
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return _buildNeumorphicCard(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Quick Actions', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: kPrimaryTextColor)),
+            const SizedBox(height: 20),
+            GridView.count(
+              crossAxisCount: 4,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              children: const [
+                _QuickActionItem(icon: Icons.schedule, label: 'Schedule', color: Color(0xFF6B8AFB)),
+                _QuickActionItem(icon: Icons.grade_outlined, label: 'Grades', color: Color(0xFF38B2AC)),
+                _QuickActionItem(icon: Icons.credit_card_outlined, label: 'Campus Card', color: Color(0xFFF6E05E)),
+                _QuickActionItem(icon: Icons.shopping_bag_outlined, label: 'Errands', color: Color(0xFF4299E1)),
+                _QuickActionItem(icon: Icons.star_border_outlined, label: 'Events', color: Color(0xFF38B2AC)),
+                _QuickActionItem(icon: Icons.book_outlined, label: 'Lectures', color: Color(0xFFF6E05E)),
+                _QuickActionItem(icon: Icons.work_outline, label: 'Internships', color: Color(0xFF4299E1)),
+                _QuickActionItem(icon: Icons.support_agent_outlined, label: 'AI Assistant', color: Color(0xFF6B8AFB)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAiAssistant() {
+    return _buildNeumorphicCard(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('AI Assistant', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: kPrimaryTextColor)),
+            const SizedBox(height: 4),
+            Text('Get things done in one sentence', style: TextStyle(color: kSecondaryTextColor, fontSize: 12)),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: [
+                PillTag(text: 'Find free time this week', backgroundColor: kLightBlue, textColor: kLightBlueText),
+                PillTag(text: 'Remind me tomorrow 8:00', backgroundColor: kLightBlue, textColor: kLightBlueText),
+                PillTag(text: 'Recommend campus events', backgroundColor: kLightBlue, textColor: kLightBlueText),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kAccentColor,
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                elevation: 0,
+              ),
+              child: const Text('Ask AI', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecommended() {
+    return _buildNeumorphicCard(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Recommended', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: kPrimaryTextColor)),
+            const SizedBox(height: 8),
+            _buildRecommendationItem(
+              icon: Icons.calendar_today,
+              color: kMintGreenText,
+              title: 'Campus Music Festival',
+              subtitle: 'Today, 18:00 • Main Square',
+              tags: [
+                PillTag(text: 'Free', backgroundColor: kLightBlue, textColor: kLightBlueText),
+                PillTag(text: 'Today', backgroundColor: kLightYellow, textColor: kLightYellowText),
+              ],
+            ),
+            const Divider(color: kBackgroundColor, height: 20, thickness: 1),
+            _buildRecommendationItem(
+              icon: Icons.chat_bubble_outline,
+              color: kAccentColor,
+              title: 'Career Development Seminar',
+              subtitle: 'Tomorrow, 14:00 • Room 201',
+              tags: [PillTag(text: 'Register', backgroundColor: kMintGreen, textColor: kMintGreenText)],
+            ),
+             const Divider(color: kBackgroundColor, height: 20, thickness: 1),
+            _buildRecommendationItem(
+              icon: Icons.auto_stories_outlined,
+              color: kLightBlueText,
+              title: 'New Library Services',
+              subtitle: 'Available Now • Central Library',
+              tags: [PillTag(text: 'New', backgroundColor: kLightBlue, textColor: kLightBlueText)],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecommendationItem({required IconData icon, required Color color, required String title, required String subtitle, required List<Widget> tags}) {
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 24),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: kPrimaryTextColor)),
+              const SizedBox(height: 4),
+              Text(subtitle, style: const TextStyle(color: kSecondaryTextColor, fontSize: 12)),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Wrap(spacing: 4.0, runSpacing: 4.0, children: tags),
+      ],
+    );
+  }
+}
+
+class _QuickActionItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const _QuickActionItem({required this.icon, required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Icon(icon, color: color, size: 24),
+        ),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(fontSize: 10, color: kSecondaryTextColor, fontWeight: FontWeight.w500)),
+      ],
+    );
+  }
+}
+
+class NeumorphicIconButton extends StatelessWidget {
+  final IconData icon;
+  const NeumorphicIconButton({super.key, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: kBackgroundColor,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            offset: const Offset(4, 4),
+            blurRadius: 8,
+          ),
+          const BoxShadow(
+            color: Colors.white,
+            offset: Offset(-4, -4),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Icon(icon, color: kSecondaryTextColor, size: 20),
+    );
+  }
+}
+
+class PillTag extends StatelessWidget {
+  final String text;
+  final Color backgroundColor;
+  final Color textColor;
+
+  const PillTag({
+    super.key,
+    required this.text,
+    required this.backgroundColor,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
